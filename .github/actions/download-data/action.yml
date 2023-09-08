@@ -1,0 +1,35 @@
+name: download-data
+description: Download Data
+
+runs:
+  using: "composite"
+  steps:
+    - name: Get release name
+      id: get-release-name
+      run: echo "release-name=$(cat release-name.txt)" >> $GITHUB_OUTPUT
+      shell: bash -l {0}
+
+    - name: Check for cache downloaded files
+      id: check-cache-download
+      uses: actions/cache@v3
+      with:
+        path: /home/runner/work/download
+        # path: ${{ env.DOWNLOAD_DIR }}
+        key: download-data-${{ env.CACHE_SEED }}-${{ steps.get-release-name.outputs.release-name }}
+        lookup-only: true
+
+    - name: Cache downloaded files
+      if: steps.check-cache-download.outputs.cache-hit != 'true'
+      uses: actions/cache@v3
+      with:
+        path: /home/runner/work/download
+        # path: ${{ env.DOWNLOAD_DIR }}
+        key: download-data-${{ env.CACHE_SEED }}-${{ steps.get-release-name.outputs.release-name }}
+
+    - name: Download files if necessary
+      if: steps.check-cache-download.outputs.cache-hit != 'true'
+      run: bash .github/actions/download-data/run.sh
+      env:
+        RELEASE_NAME: "${{ steps.get-release-name.outputs.release-name }}"
+        GITHUB_TOKEN: ${{ github.token }}
+      shell: bash -l {0}

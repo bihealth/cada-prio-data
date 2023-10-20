@@ -39,7 +39,7 @@ jobs:
         run: |
           set -x
 
-          release_name=$(gh release view -R bihealth/clinvar-data-jsonl --json name --jq .name | cut -d - -f 2)
+          release_name=$(gh release view -R bihealth/clinvar-data-jsonl --json name --jq .name | cut -d - -f 3)
 
           set +e
 
@@ -64,7 +64,7 @@ jobs:
               cp /tmp/release-name.txt release-name.txt
               git add release-name.txt
 
-              git commit -m "chore: weekly cada-prio data release 20230903"
+              git commit -m "chore: weekly cada-prio data release $tag_name"
               git push --set-upstream origin $branch_name
             else
               >&2 echo "The tag is missing but the branch exists"

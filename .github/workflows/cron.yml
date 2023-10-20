@@ -39,7 +39,11 @@ jobs:
         run: |
           set -x
 
-          release_name=$(gh release view -R bihealth/clinvar-data-jsonl --json name --jq .name | cut -d - -f 3)
+          gh release view -R bihealth/clinvar-data-jsonl --json name --jq .name \
+          | cut -d - -f 3 \
+          > /tmp/release-name.txt
+          
+          release_name=$(cat /tmp/release-name.txt)
 
           set +e
 

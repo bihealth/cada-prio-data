@@ -1,4 +1,4 @@
-name: Check clinvar-data-jsonl releaes
+name: Check clinvar-data-jsonl release
 
 on:
   workflow_dispatch:
